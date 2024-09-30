@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四六五五 - 未来的な紹介ページ</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+
+    :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --card-bg-color: rgba(0, 0, 0, 0.05);
+        --card-hover-shadow: rgba(0, 0, 0, 0.1);
+        --x-button-color: #000000;
+        --x-button-hover: #333333;
+        --gradient-start: #90EE90;
+        --gradient-end: #00CED1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --card-bg-color: rgba(255, 255, 255, 0.1);
+            --card-hover-shadow: rgba(144, 238, 144, 0.2);
+            --x-button-color: #ffffff;
+            --x-button-hover: #cccccc;
+        }
+    }
+
+    body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    header {
+        text-align: center;
+        padding: 4rem 0;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientShift 5s ease infinite, slideInFromTop 1s ease-out;
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+        font-weight: 300;
+        opacity: 0;
+        animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+
+    .profile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4rem;
+        opacity: 0;
+        animation: fadeIn 1s ease-out 0.7s forwards;
+    }
+
+    .profile-image-container {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin-right: 2rem;
+    }
+
+    .profile img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        animation: rotateIn 1s ease-out;
+    }
+
+    .profile-image-container::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+        z-index: -1;
+        opacity: 0.7;
+        filter: blur(15px);
+        animation: pulseGlow 4s infinite alternate;
+    }
+
+    .profile-info {
+        opacity: 0;
+        animation: slideInFromRight 1s ease-out 0.9s forwards;
+    }
+
+    .x-link {
+        display: inline-block;
+        background-color: var(--x-button-color);
+        color: var(--bg-color);
+        padding: 0.75rem 1.5rem;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .x-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent
+        );
+        transition: all 0.6s;
+    }
+
+    .x-link:hover::before {
+        left: 100%;
+    }
+
+    .x-link:hover {
+        background-color: var(--x-button-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .content-section {
+        background-color: var(--card-bg-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        opacity: 0;
+        animation: slideInFromLeft 1s ease-out 1.1s forwards;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .content-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .content-section:hover::before {
+        opacity: 1;
+    }
+
+    .content-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px var(--card-hover-shadow);
+    }
+
+    .post {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--card-bg-color);
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+        transition: all 0.3s ease;
+    }
+
+    .post:hover {
+        transform: translateX(10px);
+    }
+
+    .post a {
+        color: var(--text-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .post a:hover {
+        color: var(--x-button-color);
+    }
+
+    .post:nth-child(1) { animation-delay: 1.3s; }
+    .post:nth-child(2) { animation-delay: 1.5s; }
+    .post:nth-child(3) { animation-delay: 1.7s; }
+    .post:nth-child(4) { animation-delay: 1.9s; }
+    .post:nth-child(5) { animation-delay: 2.1s; }
+
+    .post:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .music-player {
+        text-align: center;
+        margin-top: 4rem;
+        opacity: 0;
+        animation: fadeIn 1s ease-out 2.3s forwards;
+    }
+
+    .music-player button {
+        background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+        color: var(--bg-color);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .music-player button::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .music-player button:hover::after {
+        opacity: 1;
+    }
+
+    .music-player button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(144, 238, 144, 0.4);
+    }
+
+    .game-section {
+        text-align: center;
+        margin-top: 4rem;
+        opacity: 0;
+        animation: fadeIn 1s ease-out 2.5s forwards;
+    }
+
+    .game-link {
+        display: inline-flex;
+        align-items: center;
+        background-color: var(--card-bg-color);
+        color: var(--text-color);
+        text-decoration: none;
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .game-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px var(--card-hover-shadow);
+    }
+
+    .game-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 1rem;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideInFromTop {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideInFromLeft {
+        from { transform: translateX(-50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideInFromRight {
+        from { transform: translateX(50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes rotateIn {
+        from { transform: rotate(-360deg) scale(0); opacity: 0; }
+        to { transform: rotate(0) scale(1); opacity: 1; }
+    }
+
+    @keyframes pulseGlow {
+        0% { opacity: 0.5; filter: blur(15px); }
+        100% { opacity: 0.8; filter: blur(20px); }
+    }
+
+    @media (max-width: 768px) {
+        .profile {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .profile-image-container {
+            margin-right: 0;
+            margin-bottom: 2rem;
+        }
+
+        .profile-info {
+            margin-left: 0;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>四六五五</h1>
+        <p class="subtitle">未来を見据える独特な視点</p>
+    </header>
+
+    <div class="profile">
+        <div class="profile-image-container">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_5367-PfM33T9gODDbwEF4EBgJK90xPv7oo2.png" alt="四六五五のアイコン">
+        </div>
+        <div class="profile-info">
+            <p>X: @kn4655</p>
+            <a href="https://x.com/kn4655" class="x-link" target="_blank">Xをフォロー</a>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <p>1969年生まれで、迎健士朗の母親。その独特な口調や特徴的なアイコンによって、ガジェット界隈から根強い支持を得ている。</p>
+    </div>
+
+    <div class="content-section">
+        <h2>ポストハイライト</h2>
+        <div class="post">
+            <a href="https://x.com/kn4655/status/1487689702765334529?s=61" target="_blank" rel="noopener noreferrer" aria-label="四六五五のポスト: 私のがま口の画像、使わないで欲しい。">
+                <p>私のがま口の画像、使わないで欲しい。</p>
+            </a>
+        </div>
+        <div class="post">
+            <a href="https://x.com/kn4655/status/1469714461351378944?s=61" target="_blank" rel="noopener noreferrer" aria-label="四六五五のポスト: 「四六五五」なんて漢数字だから、勝手に「四六五五」について呟いてもいいでしょって思うんだろうな。">
+                <p>「四六五五」なんて漢数字だから、勝手に「四六五五」について呟いてもいいでしょって思うんだろうな。</p>
+            </a>
+        </div>
+        <div class="post">
+            <a href="https://x.com/kn4655/status/1469699934845026306?s=61" target="_blank" rel="noopener noreferrer" aria-label="四六五五のポスト: 時間を決めて貸していたのに、途中から「取った」とか言われるようになった。">
+                <p>時間を決めて貸していたのに、途中から「取った」とか言われるようになった。</p>
+            </a>
+        </div>
+        <div class="post">
+            <a href="https://x.com/kn4655/status/1467767408702427137?s=61" target="_blank" rel="noopener noreferrer" aria-label="四六五五のポスト: テスト前日。勉強するべきだよな。">
+                <p>テスト前日。勉強するべきだよな。</p>
+            </a>
+        </div>
+        <div class="post">
+            <a href="https://x.com/kn4655/status/1461217262547857409?s=61" target="_blank" rel="noopener noreferrer" aria-label="四六五五のポスト: 他人の画像、勝手に使わないで下さい。">
+                <p>他人の画像、勝手に使わないで下さい。</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="game-section">
+        <h2>四六五五の冒険</h2>
+        <a href="https://unityroom.com/games/kn4655adv" class="game-link" target="_blank" rel="noopener noreferrer">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_1652-vPW86nK8JQGoNuxYq1m4d3HMKS6GBH.png" alt="四六五五の冒険 アイコン" class="game-icon">
+            ゲームをプレイ
+        </a>
+    </div>
+
+    <div class="music-player">
+        <h3>四六五五のテーマソング</h3>
+        <audio id="theme-song">
+            <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/%E5%9B%9B%E5%85%AD%E4%BA%94%E4%BA%94-brnaySickecyqTjIWwadSb1i0K2aFx.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <button onclick="togglePlay()">再生 / 停止</button>
+    </div>
+</div>
+
+<script>
+    const audio = document.getElementById('theme-song');
+    function togglePlay() {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    }
+</script>
+</body>
+</html>
